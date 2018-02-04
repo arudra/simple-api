@@ -1,18 +1,5 @@
-buildscript {
-    repositories {
-        jcenter()
-    }
-
-    dependencies {
-        classpath 'com.bmuschko:gradle-docker-plugin:3.2.3'
-    }
-}
-
 apply plugin: 'java'
 apply plugin: 'application'
-apply plugin: 'com.bmuschko.docker-remote-api'
-
-import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
 
 sourceCompatibility = 1.8
 
@@ -66,33 +53,6 @@ jar {
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     manifest { attributes 'Main-Class': 'com.simple.server.Application' }
 }
-
-task copyJar(type: Copy) {
-    dependsOn 'jar'
-    from "build/install/simple"
-    into 'build/docker'
-    rename { String fileName ->
-        fileName.replace("-${project.version}", "")
-    }
-}
-
-task buildImage(type: DockerBuildImage) {
-    dependsOn copyJar
-    if (System.env.DOCKER_HOST) {
-        url = "$System.env.DOCKER_HOST".replace("tcp", "https")
-        if (System.env.DOCKER_CERT_PATH) {
-            certPath = new File(System.env.DOCKER_CERT_PATH)
-        }
-    } else {
-        url = 'unix:///var/run/docker.sock'
-    }
-    inputDir = file('.')
-    tag = 'simple-server'
-}
-
-//build.dependsOn buildImage
-//build.dependsOn copyJar
-
 
 allprojects {
 

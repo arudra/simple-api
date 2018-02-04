@@ -5,6 +5,6 @@ import java.sql.SQLException;
 public interface DatabaseClient
 {
 
-	void run() throws SQLException;
+	String run() throws SQLException;
 
 }

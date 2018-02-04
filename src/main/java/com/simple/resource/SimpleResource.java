@@ -34,12 +34,11 @@ public class SimpleResource implements ApplicationResource
 	{
 		try
 		{
-			backend.doTheStuff();
-			return Response.ok("simple, world", MediaType.TEXT_PLAIN_TYPE).build();
+			return Response.ok(backend.getTheData(), MediaType.TEXT_PLAIN_TYPE).build();
 		} catch (final SQLException e)
 		{
 			LOGGER.catching(e);
-			return Response.serverError().build();
+			return Response.serverError().entity(e.getMessage()).build();
 		}
 	}
 

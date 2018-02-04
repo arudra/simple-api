@@ -24,20 +24,24 @@ public class DatabaseClientImpl implements DatabaseClient
 	}
 
 	@Override
-	public void run() throws SQLException
+	public String run() throws SQLException
 	{
 		try (final Connection connection = dataSource.getConnection();
 		     final Statement statement = connection.createStatement())
 		{
 			final ResultSet resultSet = statement.executeQuery("SELECT * FROM cars");
 
+			final StringBuilder builder = new StringBuilder();
+
 			while (resultSet.next())
 			{
-				System.out.println("name: " + resultSet.getString("name"));
-				System.out.println("count: " + resultSet.getInt("count"));
-				System.out.println("colour: " + resultSet.getString("colour"));
-				System.out.println();
+				builder.append("name: ").append(resultSet.getString("name")).append(" ");
+				builder.append("count: ").append(resultSet.getInt("count")).append(" ");
+				builder.append("colour: ").append(resultSet.getString("colour")).append(" ");
+				builder.append("\n");
 			}
+
+			return builder.toString();
 		}
 	}
 

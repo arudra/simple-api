@@ -15,15 +15,13 @@ public class SimpleBackendImpl implements SimpleBackend
 	@Inject
 	SimpleBackendImpl(final DatabaseClient dbClient)
 	{
-
 		databaseClient = Preconditions.checkNotNull(dbClient, "DatabaseClient is null in SimpleBackend");
 	}
 
 
 	@Override
-	public String doTheStuff() throws SQLException
+	public String getTheData() throws SQLException
 	{
-		databaseClient.run();
-		return "done";
+		return databaseClient.run();
 	}
 }

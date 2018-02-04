@@ -5,5 +5,5 @@ import java.sql.SQLException;
 public interface SimpleBackend
 {
 
-	String doTheStuff() throws SQLException;
+	String getTheData() throws SQLException;
 }
