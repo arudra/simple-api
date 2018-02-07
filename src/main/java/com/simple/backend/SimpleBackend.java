@@ -1,9 +1,11 @@
 package com.simple.backend;
 
-import java.sql.SQLException;
+import javax.ws.rs.core.Response;
 
 public interface SimpleBackend
 {
 
-	String getTheData() throws SQLException;
+	Response getProducts(String query);
+
+	Response getStoresForProduct(String drink, String location) throws BackendException;
 }
