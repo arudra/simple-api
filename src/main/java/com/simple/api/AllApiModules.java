@@ -9,23 +9,27 @@ import com.simple.database.DatabaseModule;
 import com.simple.lcbo.LcboClientModule;
 import com.simple.resource.SimpleResource;
 import com.simple.server.AbstractApplicationResourceModule;
+import com.simple.user.backend.UserBackendModule;
+import com.simple.user.resource.UserResource;
 
 public class AllApiModules extends AbstractApplicationResourceModule
 {
 	@Override
 	protected void configureAdditional()
 	{
-		install(new BackendModule());
-		install(new DatabaseModule());
-		install(new LcboClientModule());
+		install( new BackendModule() );
+		install( new DatabaseModule() );
+		install( new LcboClientModule() );
+		install( new UserBackendModule() );
 
-		bindResource(SimpleResource.class);
+		bindResource( SimpleResource.class );
+		bindResource( UserResource.class );
 	}
 
 	@Provides
 	@Singleton
 	public ObjectMapper getMapper()
 	{
-		return new ObjectMapper().registerModule(new Jdk8Module());
+		return new ObjectMapper().registerModule( new Jdk8Module() );
 	}
 }
