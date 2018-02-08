@@ -13,7 +13,7 @@ import com.simple.lcbo.ProductResponse;
 public class SimpleBackendImpl implements SimpleBackend
 {
 
-	public static final int RESPONSE_OK = Response.Status.OK.getStatusCode();
+	private static final int RESPONSE_OK = Response.Status.OK.getStatusCode();
 
 	private final DatabaseClient databaseClient;
 
@@ -27,12 +27,6 @@ public class SimpleBackendImpl implements SimpleBackend
 		databaseClient = Preconditions.checkNotNull( dbClient, "DatabaseClient is null in SimpleBackend" );
 		this.lcboClient = Preconditions.checkNotNull( lcboClient, "LcboClient is null in SimpleBackend" );
 		this.mapper = Preconditions.checkNotNull( mapper, "ObjectMapper is null in SimpleBackend" );
-	}
-
-	@Override
-	public Response getProducts( final String query )
-	{
-		return lcboClient.getProducts( query );
 	}
 
 	@Override

@@ -10,7 +10,8 @@ public class LcboClientImpl implements LcboClient
 {
 
 	private static final String API_TOKEN = "Token "
-	                                        + "MDphNDA5YWFhYS0wYjllLTExZTgtOTgyZS03ZmU2MTJhMTg5YzU6cjlEaHF0d2VISEJwYWJ5SVdTWW4zZjhxaDVYUWdsOEs0WDFL";
+	                                        +
+	                                        "MDphNDA5YWFhYS0wYjllLTExZTgtOTgyZS03ZmU2MTJhMTg5YzU6cjlEaHF0d2VISEJwYWJ5SVdTWW4zZjhxaDVYUWdsOEs0WDFL";
 
 	private static final String LCBO_ENDPOINT = "http://lcboapi.com";
 
@@ -19,7 +20,7 @@ public class LcboClientImpl implements LcboClient
 	private final Client client;
 
 	@Inject
-	private LcboClientImpl( final Client client )
+	LcboClientImpl( final Client client )
 	{
 		this.client = Preconditions.checkNotNull( client, "Client is null in LcboClientImpl" );
 	}
@@ -41,9 +42,7 @@ public class LcboClientImpl implements LcboClient
 		return client.target( LCBO_ENDPOINT )
 		             .path( "/stores" )
 		             .queryParam( "product_id", productId )
-		             //		             .queryParam( "q", location )
-		             .queryParam( "lat", 43.659 )
-		             .queryParam( "lon", -79.439 )
+		             .queryParam( "q", location )
 		             .request()
 		             .header( AUTHORIZATION, API_TOKEN )
 		             .get();

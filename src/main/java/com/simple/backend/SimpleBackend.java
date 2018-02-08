@@ -5,7 +5,6 @@ import javax.ws.rs.core.Response;
 public interface SimpleBackend
 {
 
-	Response getProducts(String query);
+	Response getStoresForProduct( String drink, String location ) throws BackendException;
 
-	Response getStoresForProduct(String drink, String location) throws BackendException;
 }
