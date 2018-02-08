@@ -5,7 +5,7 @@ class App extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {drink: '', location: ''};
+    this.state = {drink: '', location: '', stores: []};
 
     this.handleDrinkChange = this.handleDrinkChange.bind(this);
     this.handleLocationChange = this.handleLocationChange.bind(this);
@@ -17,15 +17,22 @@ class App extends Component {
   }
 
   handleLocationChange(event) {
-    this.setState({location: event.target.value})
+    this.setState({location: event.target.value});
   }
 
   handleSubmit(event) {
     fetch('http://localhost:8080/v1/lcbo/stores?drink='+this.state.drink +"&location=" + this.state.location, {
-      mode: 'no-cors'
+      mode: 'cors'
     })
-    .then((response) => {
-      console.log(JSON.parse(response));
+    .then((r) => {
+      r.text().then((text) => {
+          const json = text ? JSON.parse(text) : {};
+          console.log(json);
+
+          const results = json.result.length > 10 ? json.result.slice(0,10) : json.result;
+          console.log(results);
+          this.setState({stores: results});
+      })
     })
     .catch((error) => {
       console.error(error);

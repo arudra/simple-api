@@ -1,14 +1,14 @@
 package com.simple.backend;
 
-import java.io.IOException;
-import javax.inject.Inject;
-import javax.ws.rs.core.Response;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
 import com.simple.database.DatabaseClient;
 import com.simple.lcbo.LcboClient;
 import com.simple.lcbo.ProductResponse;
+
+import javax.inject.Inject;
+import javax.ws.rs.core.Response;
+import java.io.IOException;
 
 public class SimpleBackendImpl implements SimpleBackend
 {
@@ -49,7 +49,10 @@ public class SimpleBackendImpl implements SimpleBackend
 
 			final long id = productResponse.result().get( 0 ).productId();
 
-			return lcboClient.getStores( id, location );
+			final Response stores = lcboClient.getStores( id, location );
+			stores.getHeaders().add("Access-Control-Allow-Origin", "*");
+
+			return stores;
 		}
 		catch( final IOException e )
 		{

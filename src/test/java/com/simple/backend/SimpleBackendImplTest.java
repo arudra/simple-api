@@ -1,24 +1,24 @@
 package com.simple.backend;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.when;
-
-import java.io.IOException;
-import javax.ws.rs.core.Response;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import com.simple.database.DatabaseClient;
 import com.simple.lcbo.DrinkResult;
 import com.simple.lcbo.LcboClient;
 import com.simple.lcbo.ProductResponse;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
+import java.io.IOException;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 
 public class SimpleBackendImplTest
 {
@@ -60,6 +60,9 @@ public class SimpleBackendImplTest
 	@Mock
 	private Response mockResponse2;
 
+	@Mock
+	private MultivaluedMap< String, Object > mockHeadersMap;
+
 	// Helpers
 	@Before
 	public void setUp() throws Exception
@@ -98,6 +101,7 @@ public class SimpleBackendImplTest
 		when( mockProductResponse.result() ).thenReturn( ImmutableList.of( mockDrinkResult ) );
 		when( mockDrinkResult.productId() ).thenReturn( PRODUCT_ID );
 		when( mockLcboClient.getStores( PRODUCT_ID, TORONTO ) ).thenReturn( mockResponse2 );
+		when( mockResponse2.getHeaders() ).thenReturn( mockHeadersMap );
 
 		assertThat( sut.getStoresForProduct( DRINK, TORONTO ), is( mockResponse2 ) );
 	}

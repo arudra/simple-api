@@ -1,19 +1,18 @@
 package com.simple.resource;
 
+import com.google.common.base.Preconditions;
+import com.simple.backend.BackendException;
+import com.simple.backend.SimpleBackend;
+import com.simple.server.ApplicationResource;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.google.common.base.Preconditions;
-import com.simple.backend.BackendException;
-import com.simple.backend.SimpleBackend;
-import com.simple.server.ApplicationResource;
 
 @Path( "v1/lcbo/stores" )
 public class SimpleResource implements ApplicationResource
