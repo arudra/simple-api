@@ -1,32 +1,63 @@
 .App {
-  text-align: center;
+    text-align: center;
 }
 
 .App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
-  color: white;
+    background-color: #222;
+    height: 150px;
+    padding: 20px;
+    color: white;
+}
+
+.App-form {
+    margin-top: 20px;
 }
 
 .App-title {
-  font-size: 1.5em;
+    font-size: 1.5em;
 }
 
 .App-label {
-  font-size: large;
-  margin: 15px;
+    font-size: large;
+    margin: 15px 10px 15px 15px;
+}
+
+.App-field {
+    margin: 5px;
 }
 
 .App-input {
-  height: 40px;
-  width: 250px;
-  font-size: large;
+    height: 40px;
+    width: 250px;
+    font-size: large;
+    margin: 10px;
 }
 
 .App-button {
-  height: 40px;
-  width: 125px;
-  margin: 15px;
-  font-size: large;
+    height: 40px;
+    width: 125px;
+    margin: 15px;
+    font-size: large;
+}
+
+.App-list {
+    margin-top: 20px;
+}
+
+.App-list-entries {
+    font-size: large;
+    list-style-type: none;
+    padding-left: 30px;
+    margin: auto;
+    width: 40%;
+    text-align: left;
+}
+
+.App-list-title {
+    font-size: x-large;
+}
+
+.App-login {
+    margin: 0 auto;
+    width: 100px;
 }

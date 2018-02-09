@@ -1,69 +1,146 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import './App.css';
 
 class App extends Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {drink: '', location: '', stores: []};
+	constructor(props) {
+		super(props);
+		this.state = {drink: '', location: '', stores: [], loggedIn: '', username: '', password: ''};
 
-    this.handleDrinkChange = this.handleDrinkChange.bind(this);
-    this.handleLocationChange = this.handleLocationChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
+		this.handleDrinkChange = this.handleDrinkChange.bind(this);
+		this.handleLocationChange = this.handleLocationChange.bind(this);
+		this.handleStoresSubmit = this.handleStoresSubmit.bind(this);
 
-  handleDrinkChange(event) {
-    this.setState({drink: event.target.value});
-  }
+		this.handleUsernameChange = this.handleUsernameChange.bind(this);
+		this.handlePasswordChange = this.handlePasswordChange.bind(this);
+		this.handleUserLoginSubmit = this.handleUserLoginSubmit.bind(this);
+		this.handleUserSignupSubmit = this.handleUserSignupSubmit.bind(this);
+	}
 
-  handleLocationChange(event) {
-    this.setState({location: event.target.value});
-  }
+	handleDrinkChange(event) {
+		this.setState({drink: event.target.value});
+	}
 
-  handleSubmit(event) {
-    fetch('http://localhost:8080/v1/lcbo/stores?drink='+this.state.drink +"&location=" + this.state.location, {
-      mode: 'cors'
-    })
-    .then((r) => {
-      r.text().then((text) => {
-          const json = text ? JSON.parse(text) : {};
-          console.log(json);
+	handleLocationChange(event) {
+		this.setState({location: event.target.value});
+	}
 
-          const results = json.result.length > 10 ? json.result.slice(0,10) : json.result;
-          console.log(results);
-          this.setState({stores: results});
-      })
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+	handleStoresSubmit(event) {
+		fetch('http://localhost:8080/v1/lcbo/stores?drink=' + this.state.drink + "&location=" + this.state.location)
+			.then((r) => {
+				r.text().then((text) => {
+					const json = text ? JSON.parse(text) : {};
 
-    event.preventDefault();
-  }
+					const results = json.result.length > 10 ? json.result.slice(0, 10) : json.result;
+					console.log(results);
+					this.setState({stores: results});
+				})
+			})
+			.catch((error) => {
+				console.error(error);
+			});
+
+		event.preventDefault();
+	}
+
+	handleUsernameChange(event) {
+		this.setState({username: event.target.value});
+	}
+
+	handlePasswordChange(event) {
+		this.setState({password: event.target.value});
+	}
+
+	handleUserLoginSubmit(event) {
+		fetch('http://localhost:8080/v1/user/login', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				username: this.state.username,
+				password: this.state.password,
+			}),
+		})
+			.then((response) => {
+				console.log(response);
+			})
+			.catch((error) => {
+				console.error(error);
+			});
 
 
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-        <h1>Awesome Drink Locator</h1>
-        </header>
-        
-        <form onSubmit={this.handleSubmit}>
-          <label className="App-label">
-            Enter a drink name: 
-            <input className="App-input" type="text" value={this.state.value} onChange={this.handleDrinkChange} />
-          </label>
+		event.preventDefault();
+	}
 
-          <label className="App-label">
-            Enter a locaiton: 
-            <input className="App-input" type="text" value={this.state.value} onChange={this.handleLocationChange} />
-          </label>
-          <input className="App-button" type="submit" value="Submit" />
-        </form>
-      </div>
-    );
-  }
+	handleUserSignupSubmit(event) {
+		fetch('http://localhost:8080/v1/user/add', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				username: this.state.username,
+				password: this.state.password,
+			}),
+		})
+			.then((response) => {
+				console.log(response);
+			})
+			.catch((error) => {
+				console.error(error);
+			});
+		
+		event.preventDefault();
+	}
+
+
+	render() {
+		const list = this.state.stores.map((s) =>
+			<li>{s.address_line_1}, {s.city}</li>
+		);
+
+		const drinksPage = <div className="App">
+			<header className="App-header">
+				<h1>Awesome Drink Locator</h1>
+			</header>
+
+			<form className="App-form" onSubmit={this.handleStoresSubmit}>
+				<label className="App-label">
+					Enter a drink name:
+					<input className="App-input" type="text" value={this.state.value} onChange={this.handleDrinkChange}/>
+				</label>
+
+				<label className="App-label">
+					Enter a location:
+					<input className="App-input" type="text" value={this.state.value} onChange={this.handleLocationChange}/>
+				</label>
+				<input className="App-button" type="submit" value="Submit"/>
+			</form>
+
+			<div className="App-list">
+				<label className="App-list-title">Store Locations</label>
+				<ul className="App-list-entries">{list}</ul>
+			</div>
+		</div>;
+
+		const loginPage = <div className="App-login">
+			<form className="App-login-form" onSubmit={this.handleUserLoginSubmit}>
+				<label>
+					Username:
+					<input type="text" value={this.state.value} onChange={this.handleUsernameChange}/>
+				</label>
+				<label>
+					Password:
+					<input type="password" value={this.state.value} onChange={this.handlePasswordChange}/>
+				</label>
+				<input className="App-button" type="submit" value="Login"/>
+				<input className="App-button" type="button" value="Sign Up" onClick={this.handleUserSignupSubmit}/>
+			</form>
+		</div>;
+
+		return (this.state.loggedIn ? drinksPage : loginPage);
+	}
 }
 
 export default App;
