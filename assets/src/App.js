@@ -82,7 +82,6 @@ class App extends Component {
 
 
 		event.preventDefault();
-		event.target.reset();
 	}
 
 	handleUserSignupSubmit(event) {
@@ -111,7 +110,6 @@ class App extends Component {
 			});
 		
 		event.preventDefault();
-		event.target.reset();
 	}
 
 
