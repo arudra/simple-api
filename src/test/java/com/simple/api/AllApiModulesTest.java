@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Module;
@@ -52,9 +53,15 @@ public class AllApiModulesTest
 	}
 
 	@Test
-	public void test_GivenResourceModule_WhenCreatingInjector_ThenReturnNotNullValue()
+	public void test_Given_ResourceModule_When_CreatingInjector_Then_ReturnNotNullValue()
 	{
 		assertThat( Guice.createInjector( sut ), is( notNullValue() ) );
+	}
+
+	@Test
+	public void test_Given_ResourceModule_When_GettingMapperProvider_Then_ReturnNotNullValue() throws Exception
+	{
+		assertThat( Guice.createInjector( sut ).getProvider( ObjectMapper.class ), is( notNullValue() ) );
 	}
 
 }

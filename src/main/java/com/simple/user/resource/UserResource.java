@@ -10,6 +10,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,7 +35,8 @@ public class UserResource implements ApplicationResource
 	                                                            .header( HttpHeaders.ALLOW, "POST" )
 	                                                            .header( HttpHeaders.ALLOW, "OPTIONS" )
 	                                                            .header( CORS_ORIGIN, "*" )
-	                                                            .header( CORS_METHODS, "GET, POST, PATCH, PUT, DELETE, OPTIONS" )
+	                                                            .header( CORS_METHODS,
+	                                                                     "GET, POST, PATCH, PUT, DELETE, OPTIONS" )
 	                                                            .header( CORS_HEADERS, "Origin, Content-Type, X-Auth-Token" )
 	                                                            .build();
 
@@ -63,47 +65,41 @@ public class UserResource implements ApplicationResource
 	@Consumes( "application/json" )
 	public Response userLogin( final String request )
 	{
+		Status status;
+		String entity = "";
+
 		try
 		{
 			final User user = mapper.readValue( request, User.class );
 			if( backend.checkUser( user.username(), user.password() ) )
 			{
-				return Response.ok()
-				               .header( CORS_ORIGIN, "*" )
-				               .header( CORS_METHODS, "GET, POST, PATCH, PUT, DELETE, OPTIONS" )
-				               .header( CORS_HEADERS, "Origin, Content-Type, X-Auth-Token" )
-				               .build();
+				status = Status.OK;
 			}
 			else
 			{
-				return Response.status( Response.Status.NOT_ACCEPTABLE )
-				               .header( CORS_ORIGIN, "*" )
-				               .header( CORS_METHODS, "GET, POST, PATCH, PUT, DELETE, OPTIONS" )
-				               .header( CORS_HEADERS, "Origin, Content-Type, X-Auth-Token" )
-				               .entity( "Invalid user or password." )
-				               .build();
+				status = Status.NOT_ACCEPTABLE;
+				entity = "Invalid user or password.";
 			}
 		}
 		catch( final IOException e )
 		{
 			LOGGER.catching( e );
-			return Response.status( Response.Status.BAD_REQUEST )
-			               .header( CORS_ORIGIN, "*" )
-			               .header( CORS_METHODS, "GET, POST, PATCH, PUT, DELETE, OPTIONS" )
-			               .header( CORS_HEADERS, "Origin, Content-Type, X-Auth-Token" )
-			               .entity( "Request is malformed." )
-			               .build();
+			status = Status.BAD_REQUEST;
+			entity = "Request is malformed.";
 		}
 		catch( final UserBackendException e )
 		{
 			LOGGER.catching( e );
-			return Response.serverError()
-			               .header( CORS_ORIGIN, "*" )
-			               .header( CORS_METHODS, "GET, POST, PATCH, PUT, DELETE, OPTIONS" )
-			               .header( CORS_HEADERS, "Origin, Content-Type, X-Auth-Token" )
-			               .entity( "Failed to login." )
-			               .build();
+			status = Status.INTERNAL_SERVER_ERROR;
+			entity = "Failed to login.";
 		}
+
+		return Response.status( status )
+		               .header( CORS_ORIGIN, "*" )
+		               .header( CORS_METHODS, "GET, POST, PATCH, PUT, DELETE, OPTIONS" )
+		               .header( CORS_HEADERS, "Origin, Content-Type, X-Auth-Token" )
+		               .entity( entity )
+		               .build();
 	}
 
 	@OPTIONS
@@ -118,35 +114,33 @@ public class UserResource implements ApplicationResource
 	@Consumes( "application/json" )
 	public Response addUser( final String request )
 	{
+		Status status;
+		String entity = "";
+
 		try
 		{
 			final User user = mapper.readValue( request, User.class );
 			backend.addUser( user.username(), user.password() );
-			return Response.ok()
-			               .header( CORS_ORIGIN, "*" )
-			               .header( CORS_METHODS, "GET, POST, PATCH, PUT, DELETE, OPTIONS" )
-			               .header( CORS_HEADERS, "Origin, Content-Type, X-Auth-Token" )
-			               .build();
+			status = Status.OK;
 		}
 		catch( final IOException e )
 		{
 			LOGGER.catching( e );
-			return Response.status( Response.Status.BAD_REQUEST )
-			               .header( CORS_ORIGIN, "*" )
-			               .header( CORS_METHODS, "GET, POST, PATCH, PUT, DELETE, OPTIONS" )
-			               .header( CORS_HEADERS, "Origin, Content-Type, X-Auth-Token" )
-			               .entity( "Request is malformed." )
-			               .build();
+			status = Status.BAD_REQUEST;
+			entity = "Request is malformed.";
 		}
 		catch( final UserBackendException e )
 		{
-			return Response.status( Response.Status.NOT_ACCEPTABLE )
-			               .header( CORS_ORIGIN, "*" )
-			               .header( CORS_METHODS, "GET, POST, PATCH, PUT, DELETE, OPTIONS" )
-			               .header( CORS_HEADERS, "Origin, Content-Type, X-Auth-Token" )
-			               .entity( "Failed to add user. This user already exists." )
-			               .build();
+			status = Status.NOT_ACCEPTABLE;
+			entity = "Failed to add user. This user already exists.";
 		}
+
+		return Response.status( status )
+		               .header( CORS_ORIGIN, "*" )
+		               .header( CORS_METHODS, "GET, POST, PATCH, PUT, DELETE, OPTIONS" )
+		               .header( CORS_HEADERS, "Origin, Content-Type, X-Auth-Token" )
+		               .entity( entity )
+		               .build();
 	}
 
 }
