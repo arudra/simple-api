@@ -26,19 +26,23 @@ class App extends Component {
 	}
 
 	handleStoresSubmit(event) {
-		fetch('http://localhost:8080/v1/lcbo/stores?drink=' + this.state.drink + "&location=" + this.state.location)
+		if(this.state.drink && this.state.location) {
+			fetch('http://localhost:8080/v1/lcbo/stores?drink=' + this.state.drink + "&location=" + this.state.location)
 			.then((r) => {
 				r.text().then((text) => {
 					const json = text ? JSON.parse(text) : {};
-
 					const results = json.result.length > 10 ? json.result.slice(0, 10) : json.result;
-					console.log(results);
-					this.setState({stores: results});
+					this.setState({stores: results, drink: '', location: ''});
 				})
 			})
 			.catch((error) => {
 				console.error(error);
 			});
+
+			event.target.reset();
+		} else {
+			alert('Please fill out both fields.');
+		}
 
 		event.preventDefault();
 	}
@@ -63,7 +67,14 @@ class App extends Component {
 			}),
 		})
 			.then((response) => {
-				console.log(response);
+				if(response.status===200)
+				{
+					this.setState({loggedIn: 'true', username: '', password: ''});
+				} else {
+					response.text().then((text) => {
+						alert(text);
+					});
+				}
 			})
 			.catch((error) => {
 				console.error(error);
@@ -71,6 +82,7 @@ class App extends Component {
 
 
 		event.preventDefault();
+		event.target.reset();
 	}
 
 	handleUserSignupSubmit(event) {
@@ -85,20 +97,27 @@ class App extends Component {
 			}),
 		})
 			.then((response) => {
-				console.log(response);
+				if(response.status===200)
+				{
+					this.setState({loggedIn: 'true', username: '', password: ''});
+				} else {
+					response.text().then((text) => {
+						alert(text);
+					});
+				}
 			})
 			.catch((error) => {
 				console.error(error);
 			});
 		
 		event.preventDefault();
+		event.target.reset();
 	}
 
 
 	render() {
-		const list = this.state.stores.map((s) =>
-			<li>{s.address_line_1}, {s.city}</li>
-		);
+		const list = this.state.stores.map((s) => <li>{s.address_line_1}, {s.city}</li> );
+		const entries = this.state.stores.length>0 ? (<ul className="App-list-entries">{list}</ul>) : <div>No Results</div>;
 
 		const drinksPage = <div className="App">
 			<header className="App-header">
@@ -120,7 +139,7 @@ class App extends Component {
 
 			<div className="App-list">
 				<label className="App-list-title">Store Locations</label>
-				<ul className="App-list-entries">{list}</ul>
+				{entries}
 			</div>
 		</div>;
 
