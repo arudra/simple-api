@@ -69,11 +69,12 @@ class App extends Component {
 			.then((response) => {
 				if(response.status===200)
 				{
-					this.setState({loggedIn: 'true', username: '', password: ''});
+					this.setState({loggedIn: 'true', username: '', password: '', value: ''});
 				} else {
 					response.text().then((text) => {
 						alert(text);
-					});
+
+		event.target.reset();});
 				}
 			})
 			.catch((error) => {
@@ -82,6 +83,7 @@ class App extends Component {
 
 
 		event.preventDefault();
+		event.target.reset();
 	}
 
 	handleUserSignupSubmit(event) {
@@ -98,7 +100,7 @@ class App extends Component {
 			.then((response) => {
 				if(response.status===200)
 				{
-					this.setState({loggedIn: 'true', username: '', password: ''});
+					this.setState({loggedIn: 'true', username: '', password: '', value: ''});
 				} else {
 					response.text().then((text) => {
 						alert(text);
@@ -141,15 +143,18 @@ class App extends Component {
 			</div>
 		</div>;
 
-		const loginPage = <div className="App-login">
-			<form className="App-login-form" onSubmit={this.handleUserLoginSubmit}>
-				<label>
+		const loginPage = <div className="App">
+			<header className="App-header">
+				<h1>Awesome Drink Locator</h1>
+			</header>
+			<form className="App-form" onSubmit={this.handleUserLoginSubmit}>
+				<label className="App-label">
 					Username:
-					<input type="text" value={this.state.value} onChange={this.handleUsernameChange}/>
+					<input className="App-input" type="text" value={this.state.value} onChange={this.handleUsernameChange}/>
 				</label>
-				<label>
+				<label className="App-label">
 					Password:
-					<input type="password" value={this.state.value} onChange={this.handlePasswordChange}/>
+					<input className="App-input" type="password" value={this.state.value} onChange={this.handlePasswordChange}/>
 				</label>
 				<input className="App-button" type="submit" value="Login"/>
 				<input className="App-button" type="button" value="Sign Up" onClick={this.handleUserSignupSubmit}/>
